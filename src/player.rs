@@ -10,12 +10,19 @@ pub enum State {
     Right,
 }
 
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+enum Orientation {
+    Left,
+    Right,
+}
+
 #[derive(Debug)]
 pub struct Player {
     position: Vector2,
     color: Color,
     state: State,
     animation: AnimationManager<State>,
+    orientation: Orientation,
 }
 
 impl Player {
@@ -25,6 +32,7 @@ impl Player {
             color: Color::WHITE,
             animation,
             state: State::Left,
+            orientation: Orientation::Right,
         }
     }
 
@@ -44,10 +52,12 @@ impl Player {
         }
         if rl.is_key_down(KeyboardKey::KEY_A) {
             self.state = State::Left;
+            self.orientation = Orientation::Left;
             self.position.x -= speed * dt;
         }
         if rl.is_key_down(KeyboardKey::KEY_D) {
             self.state = State::Right;
+            self.orientation = Orientation::Right;
             self.position.x += speed * dt;
         }
 
@@ -65,8 +75,9 @@ impl Player {
             Vector2::zero(),
             self.color,
         );
-        if self.state == State::Left {
-            settings.flip_y = true;
+        match self.orientation {
+            Orientation::Left => settings.flip_y = true,
+            Orientation::Right => settings.flip_y = false,
         }
 
         self.animation.draw(handle, asset_manager, settings);
