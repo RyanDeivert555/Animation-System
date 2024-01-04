@@ -1,8 +1,4 @@
-use crate::{
-    assets::{AssetManager, TextureId},
-    draw_settings::DrawSettings,
-    spritesheet::SpriteSheet,
-};
+use crate::{assets::AssetManager, draw_settings::DrawSettings, spritesheet::SpriteSheet};
 use raylib::prelude::*;
 
 #[derive(Debug, PartialEq)]
@@ -23,11 +19,11 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(asset_manager: &AssetManager, atlas_id: TextureId) -> Self {
+    pub fn new(spritesheet: SpriteSheet) -> Self {
         Self {
             position: Vector2::new(100.0, 100.0),
             color: Color::WHITE,
-            spritesheet: SpriteSheet::new(asset_manager, atlas_id, 4, 4, 0.15),
+            spritesheet,
             state: State::Left,
         }
     }
@@ -52,13 +48,6 @@ impl Player {
         if rl.is_key_down(KeyboardKey::KEY_D) {
             self.state = State::Right;
             self.position.x += 100.0 * dt;
-        }
-
-        match self.state {
-            State::Idle | State::Down => self.spritesheet.update_state(0),
-            State::Up => self.spritesheet.update_state(1),
-            State::Left => self.spritesheet.update_state(2),
-            State::Right => self.spritesheet.update_state(3),
         }
 
         if self.state != State::Idle {

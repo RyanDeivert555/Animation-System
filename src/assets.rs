@@ -24,6 +24,22 @@ impl AssetManager {
         Ok(self.textures.len() - 1)
     }
 
+    pub fn load_spritesheet(
+        &mut self,
+        context: &mut RaylibContext,
+        filename: &str,
+        frame_count: usize,
+        animation_speed: f32,
+    ) -> Result<SpriteSheet, String> {
+        let atlas = context.load_texture(filename)?;
+        // id will be correct after pushing texture
+        let id = self.textures.len();
+        let spritesheet = SpriteSheet::new(&atlas, id, frame_count, animation_speed);
+        self.textures.push(atlas);
+
+        Ok(spritesheet)
+    }
+
     pub fn texture(&self, id: TextureId) -> Option<&Texture2D> {
         self.textures.get(id)
     }
@@ -78,7 +94,7 @@ impl AssetManager {
 
         let src_rect = Rectangle::new(
             spritesheet.current_frame as f32 * spritesheet.frame_width,
-            spritesheet.current_state as f32 * spritesheet.frame_height,
+            spritesheet.frame_height,
             spritesheet.frame_width,
             spritesheet.frame_height,
         );

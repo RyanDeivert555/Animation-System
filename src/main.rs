@@ -1,3 +1,4 @@
+mod animation;
 mod assets;
 mod context;
 mod draw_settings;
@@ -19,11 +20,11 @@ fn main() {
     context.rl.set_target_fps(60);
 
     let mut assets = AssetManager::new();
-    let atlas_id = assets
-        .load_texture(&mut context, "assets/sprites.png")
+    let spritesheet = assets
+        .load_spritesheet(&mut context, "assets/sprites.png", 4, 0.2)
         .unwrap();
 
-    let mut player = Player::new(&assets, atlas_id);
+    let mut player = Player::new(spritesheet);
 
     while !context.rl.window_should_close() {
         player.update(&context.rl);
