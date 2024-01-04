@@ -28,6 +28,7 @@ fn main() {
     let player_walk = assets
         .load_spritesheet(&mut context, "assets/character_walk.png", 27, 0.01)
         .unwrap();
+    // repetitive, just a brief example
     player_animation
         .add_state(State::Idle, player_idle)
         .add_state(State::Left, player_walk)
