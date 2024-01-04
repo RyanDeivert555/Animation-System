@@ -65,9 +65,8 @@ impl Player {
             Vector2::zero(),
             self.color,
         );
-        match self.state {
-            State::Left => settings.flip_y = true,
-            _ => ()
+        if self.state == State::Left {
+            settings.flip_y = true;
         }
 
         self.animation.draw(handle, asset_manager, settings);

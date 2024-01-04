@@ -1,3 +1,4 @@
+#![allow(unused)]
 use crate::assets::TextureId;
 use raylib::texture::Texture2D;
 

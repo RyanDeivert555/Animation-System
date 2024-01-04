@@ -1,3 +1,4 @@
+#![allow(unused)]
 use crate::{context::RaylibContext, draw_settings::DrawSettings, spritesheet::SpriteSheet};
 use raylib::prelude::*;
 
@@ -103,7 +104,7 @@ impl AssetManager {
             } else {
                 spritesheet.frame_height
             };
-            
+
             Rectangle::new(
                 spritesheet.current_frame as f32 * spritesheet.frame_width,
                 spritesheet.frame_height,

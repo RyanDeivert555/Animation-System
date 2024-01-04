@@ -1,10 +1,11 @@
+#![allow(unused)]
 use crate::assets::AssetManager;
 use crate::draw_settings::DrawSettings;
 use crate::spritesheet::SpriteSheet;
 use raylib::drawing::RaylibDrawHandle;
 use std::collections::HashMap;
-use std::hash::Hash;
 use std::fmt::Debug;
+use std::hash::Hash;
 
 #[derive(Debug)]
 pub struct AnimationManager<State: Eq + Hash + Copy + Debug> {
@@ -50,7 +51,10 @@ impl<State: Eq + Hash + Copy + Debug> AnimationManager<State> {
         if let Some(ss) = self.state_map.get(&self.current_state) {
             asset_manager.draw_frame(handle, *ss, settings);
         } else {
-            println!("State {:?} does not have an animation mapped", self.current_state);
+            println!(
+                "State {:?} does not have an animation mapped",
+                self.current_state
+            );
         }
     }
 }
