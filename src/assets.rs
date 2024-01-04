@@ -52,6 +52,8 @@ impl AssetManager {
         id: TextureId,
         position: Vector2,
         scale: Vector2,
+        flip_x: bool,
+        flip_y: bool,
         rotation: f32,
         origin: Vector2,
         tint: Color,
@@ -60,7 +62,12 @@ impl AssetManager {
         let width = texture.width as f32;
         let height = texture.height as f32;
 
-        let src_rect = Rectangle::new(0.0, 0.0, width, height);
+        let src_rect = {
+            let width = if flip_y { -width } else { width };
+            let height = if flip_x { -height } else { height };
+
+            Rectangle::new(0.0, 0.0, width, height)
+        };
         let dest_rect = Rectangle::new(position.x, position.y, width * scale.x, height * scale.y);
 
         handle.draw_texture_pro(texture, src_rect, dest_rect, origin, rotation, tint);
@@ -78,6 +85,8 @@ impl AssetManager {
             id,
             settings.position,
             settings.scale,
+            settings.flip_x,
+            settings.flip_y,
             settings.rotation,
             settings.origin,
             settings.tint,
