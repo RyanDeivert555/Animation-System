@@ -58,7 +58,7 @@ impl Player {
     pub fn draw(&self, asset_manager: &AssetManager, handle: &mut RaylibDrawHandle) {
         let mut settings = DrawSettings::new(
             self.position,
-            Vector2::new(2.0, 2.0),
+            Vector2::new(3.0, 3.0),
             false,
             false,
             0.0,
