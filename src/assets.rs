@@ -92,12 +92,25 @@ impl AssetManager {
     ) {
         let texture = self.texture(spritesheet.atlas_id).unwrap();
 
-        let src_rect = Rectangle::new(
-            spritesheet.current_frame as f32 * spritesheet.frame_width,
-            spritesheet.frame_height,
-            spritesheet.frame_width,
-            spritesheet.frame_height,
-        );
+        let src_rect = {
+            let width = if settings.flip_y {
+                -spritesheet.frame_width
+            } else {
+                spritesheet.frame_width
+            };
+            let height = if settings.flip_x {
+                -spritesheet.frame_height
+            } else {
+                spritesheet.frame_height
+            };
+            
+            Rectangle::new(
+                spritesheet.current_frame as f32 * spritesheet.frame_width,
+                spritesheet.frame_height,
+                width,
+                height,
+            )
+        };
 
         let dest_rect = Rectangle::new(
             settings.position.x,

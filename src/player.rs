@@ -1,8 +1,8 @@
-use crate::{assets::AssetManager, draw_settings::DrawSettings, spritesheet::SpriteSheet};
+use crate::{animation::AnimationManager, assets::AssetManager, draw_settings::DrawSettings};
 use raylib::prelude::*;
 
-#[derive(Debug, PartialEq)]
-enum State {
+#[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+pub enum State {
     Idle,
     Down,
     Up,
@@ -14,58 +14,62 @@ enum State {
 pub struct Player {
     position: Vector2,
     color: Color,
-    spritesheet: SpriteSheet,
     state: State,
+    animation: AnimationManager<State>,
 }
 
 impl Player {
-    pub fn new(spritesheet: SpriteSheet) -> Self {
+    pub fn new(animation: AnimationManager<State>) -> Self {
         Self {
             position: Vector2::new(100.0, 100.0),
             color: Color::WHITE,
-            spritesheet,
+            animation,
             state: State::Left,
         }
     }
 
     pub fn update(&mut self, rl: &RaylibHandle) {
         let dt = rl.get_frame_time();
+        let speed = 250.0;
 
         self.state = State::Idle;
 
         if rl.is_key_down(KeyboardKey::KEY_W) {
             self.state = State::Up;
-            self.position.y -= 100.0 * dt;
+            self.position.y -= speed * dt;
         }
         if rl.is_key_down(KeyboardKey::KEY_S) {
             self.state = State::Down;
-            self.position.y += 100.0 * dt;
+            self.position.y += speed * dt;
         }
         if rl.is_key_down(KeyboardKey::KEY_A) {
             self.state = State::Left;
-            self.position.x -= 100.0 * dt;
+            self.position.x -= speed * dt;
         }
         if rl.is_key_down(KeyboardKey::KEY_D) {
             self.state = State::Right;
-            self.position.x += 100.0 * dt;
+            self.position.x += speed * dt;
         }
 
-        if self.state != State::Idle {
-            self.spritesheet.animate(dt);
-        } else {
-            self.spritesheet.reset();
-        }
+        self.animation.change_state(self.state);
+        self.animation.animate(dt);
     }
 
     pub fn draw(&self, asset_manager: &AssetManager, handle: &mut RaylibDrawHandle) {
-        let settings = DrawSettings::new(
+        let mut settings = DrawSettings::new(
             self.position,
-            Vector2::new(0.3, 0.3),
+            Vector2::new(2.0, 2.0),
+            false,
+            false,
             0.0,
             Vector2::zero(),
             self.color,
         );
+        match self.state {
+            State::Left => settings.flip_y = true,
+            _ => ()
+        }
 
-        asset_manager.draw_frame(handle, self.spritesheet, settings);
+        self.animation.draw(handle, asset_manager, settings);
     }
 }

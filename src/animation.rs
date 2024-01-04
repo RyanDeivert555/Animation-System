@@ -1,18 +1,18 @@
-use raylib::drawing::RaylibDrawHandle;
-use std::collections::HashMap;
-use std::hash::Hash;
-
 use crate::assets::AssetManager;
 use crate::draw_settings::DrawSettings;
 use crate::spritesheet::SpriteSheet;
+use raylib::drawing::RaylibDrawHandle;
+use std::collections::HashMap;
+use std::hash::Hash;
+use std::fmt::Debug;
 
 #[derive(Debug)]
-pub struct AnimationManager<State: Eq + Hash> {
+pub struct AnimationManager<State: Eq + Hash + Copy + Debug> {
     state_map: HashMap<State, SpriteSheet>,
     current_state: State,
 }
 
-impl<State: Eq + Hash> AnimationManager<State> {
+impl<State: Eq + Hash + Copy + Debug> AnimationManager<State> {
     pub fn new(initial_state: State) -> Self {
         Self {
             state_map: HashMap::new(),
@@ -29,13 +29,28 @@ impl<State: Eq + Hash> AnimationManager<State> {
         self.current_state = new_state;
     }
 
+    pub fn animate(&mut self, dt: f32) {
+        self.state_map
+            .entry(self.current_state)
+            .and_modify(|ss| ss.animate(dt));
+    }
+
+    pub fn reset(&mut self) {
+        self.state_map
+            .entry(self.current_state)
+            .and_modify(|ss| ss.reset());
+    }
+
     pub fn draw(
         &self,
         handle: &mut RaylibDrawHandle,
         asset_manager: &AssetManager,
         settings: DrawSettings,
     ) {
-        let spritesheet = self.state_map.get(&self.current_state).unwrap();
-        asset_manager.draw_frame(handle, *spritesheet, settings);
+        if let Some(ss) = self.state_map.get(&self.current_state) {
+            asset_manager.draw_frame(handle, *ss, settings);
+        } else {
+            println!("State {:?} does not have an animation mapped", self.current_state);
+        }
     }
 }
