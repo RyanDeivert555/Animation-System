@@ -51,7 +51,7 @@ impl SpriteSheet {
         self.current_time = 0.0
     }
 
-    pub fn done(&self) -> bool {
+    pub fn is_done(&self) -> bool {
         self.current_frame == self.frame_count
     }
 }

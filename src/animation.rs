@@ -42,6 +42,18 @@ impl<State: Eq + Hash + Copy + Debug> AnimationManager<State> {
             .and_modify(|ss| ss.reset());
     }
 
+    pub fn current_frame(&self) -> Option<usize> {
+        self.state_map
+            .get(&self.current_state)
+            .map(|ss| ss.current_frame)
+    }
+
+    pub fn is_done(&self) -> Option<bool> {
+        self.state_map
+            .get(&self.current_state)
+            .map(|ss| ss.is_done())
+    }
+
     pub fn draw(
         &self,
         handle: &mut RaylibDrawHandle,
