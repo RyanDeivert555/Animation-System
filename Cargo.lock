@@ -3,6 +3,13 @@
 version = 3
 
 [[package]]
+name = "animation_state_machine"
+version = "0.1.0"
+dependencies = [
+ "raylib",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -65,11 +72,4 @@ dependencies = [
  "cc",
  "cmake",
  "fs_extra",
-]
-
-[[package]]
-name = "raylib_test"
-version = "0.1.0"
-dependencies = [
- "raylib",
 ]

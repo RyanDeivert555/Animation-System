@@ -1,5 +1,5 @@
 [package]
-name = "raylib_test"
+name = "animation_state_machine"
 version = "0.1.0"
 edition = "2021"
 
